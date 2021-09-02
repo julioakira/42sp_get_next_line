@@ -1,60 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*   test.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jakira-p <jakira-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/08/24 22:58:10 by jakira-p          #+#    #+#             */
-/*   Updated: 2021/09/02 03:50:19 by jakira-p         ###   ########.fr       */
+/*   Created: 2021/08/31 06:17:04 by jakira-p          #+#    #+#             */
+/*   Updated: 2021/08/31 06:21:20 by jakira-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <stddef.h>
+#include <string.h>
 
-int	str_is_line(char *str)
+size_t	ft_strlen(const char *s)
 {
 	size_t	idx;
 
 	idx = 0;
-	while (str && str[idx])
-	{
-		if (str[idx] == '\n')
-			return (1);
+	while (s && s[idx] != '\0')
 		idx++;
-	}
-	return (0);
-}
-
-// Unlike the original, needs to check str otherwise segfault.
-size_t	ft_strlen(const char *str)
-{
-	size_t	idx;
-
-	idx = 0;
-	while (str && str[idx])
-	{
-		idx++;
-	}
 	return (idx);
-}
-
-// Implementation without aux functions (memset and bzero)
-void	*ft_calloc(size_t nmemb, size_t size)
-{
-	void	*ptr;
-	size_t	idx;
-
-	idx = 0;
-	ptr = malloc(nmemb * size);
-	if (!ptr)
-		return (NULL);
-	while (idx < (nmemb * size))
-	{
-		((unsigned char *)ptr)[idx] = (unsigned char)0;
-		idx++;
-	}
-	return (ptr);
 }
 
 char	*ft_strjoin(char const *s1, char const *s2)
@@ -65,21 +33,29 @@ char	*ft_strjoin(char const *s1, char const *s2)
 
 	if (!s1 && !s2)
 		return (NULL);
-	result = (char *)ft_calloc(ft_strlen(s1) + ft_strlen(s2) + 1, sizeof(char));
+	result = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
 	idx = 0;
 	s_idx = 0;
 	if (result == NULL)
 		return (NULL);
-	while (s1 && s1[idx])
+	while (s1[idx])
 	{
 		result[idx] = s1[idx];
 		idx++;
 	}
-	while (s2 && s2[s_idx])
+	while (s2[s_idx])
 	{
 		result[idx] = s2[s_idx];
 		idx++;
 		s_idx++;
 	}
+	result[idx] = '\0';
 	return (result);
+}
+
+int main()
+{
+    char *s1 = "Lalala";
+    char *s2 = NULL;
+    printf("Joined: %s\n", ft_strjoin(s2, s1));
 }

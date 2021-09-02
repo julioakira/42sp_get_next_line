@@ -6,28 +6,22 @@
 /*   By: jakira-p <jakira-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/24 22:58:15 by jakira-p          #+#    #+#             */
-/*   Updated: 2021/08/26 04:15:26 by jakira-p         ###   ########.fr       */
+/*   Updated: 2021/09/01 04:27:40 by jakira-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
-#include <stdlib.h>
-#include <unistd.h>
-#include <stddef.h>
+# include <stdlib.h>
+# include <unistd.h>
+# include <stddef.h>
 
-typedef struct node
-{
-	char			*content;
-	int				counter;
-	struct node	*next;
-}				node_t;
+// Auxiliary functions
+int		str_is_line(char *str);
+size_t	ft_strlen(const char *str);
+void	*ft_calloc(size_t nmemb, size_t size);
+char	*ft_strjoin(char const *s1, char const *s2);
 
-node_t	*node_new(char *content);
-void	node_add_back(node_t **node, node_t *new_node);
-void	node_add_front(node_t **node, node_t *new_node);
-int		get_nl_position(char *str);
-
+// Main function
 char	*get_next_line(int fd);
-
 #endif

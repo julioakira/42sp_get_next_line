@@ -6,7 +6,7 @@
 /*   By: jakira-p <jakira-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/24 23:24:53 by jakira-p          #+#    #+#             */
-/*   Updated: 2021/08/24 23:28:38 by jakira-p         ###   ########.fr       */
+/*   Updated: 2021/09/02 03:52:09 by jakira-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,11 @@ int	add_one_non_static(void)
 	return (nbr);
 }
 
+// Works as a global variable.
+// Variable lifetime -> Automatic or Static.
+// Scope -> Local or Global.
+// Automatic or Local Variables -> Stored in the stack and deallocated after call stack.
+// Static or Global Variables -> Stored in the heap deallocated only after program finishes execution.
 int main(void)
 {
 	printf("Value of static nbr: %d\n", add_one_static());
