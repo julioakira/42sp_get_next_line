@@ -6,14 +6,15 @@
 /*   By: jakira-p <jakira-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/24 22:58:12 by jakira-p          #+#    #+#             */
-/*   Updated: 2021/09/02 03:40:55 by jakira-p         ###   ########.fr       */
+/*   Updated: 2021/09/06 19:58:35 by jakira-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
+#include "get_next_line.h"
+
 static char	*retrieve_line(char *buffer);
-static char	*retrieve_buffer(char *str);
 static char	*buffer_to_line(char *buffer, char *line);
 
 static char	*buffer_to_line(char *buffer, char *line)
@@ -59,35 +60,6 @@ static char	*retrieve_line(char *buffer)
 	return (line);
 }
 
-static char	*retrieve_buffer(char *buffer)
-{
-	size_t	idx;
-	size_t	piece_idx;
-	char	*buffer_piece;
-
-	idx = 0;
-	piece_idx = 0;
-	if (!buffer)
-		return (NULL);
-	while (buffer[idx] && buffer[idx] != '\n')
-		idx++;
-	buffer_piece = ft_calloc((ft_strlen(buffer) - idx) + 1, sizeof(char));
-	if (!buffer[idx] || !buffer_piece)
-	{
-		free(buffer);
-		return (NULL);
-	}
-	idx++;
-	while (buffer[idx])
-	{
-		buffer_piece[piece_idx] = buffer[idx];
-		idx++;
-		piece_idx++;
-	}
-	free(buffer);
-	return (buffer_piece);
-}
-
 char	*get_next_line(int fd)
 {
 	char		*buffer;
@@ -101,19 +73,32 @@ char	*get_next_line(int fd)
 	buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
 	if (!buffer)
 		return (NULL);
-	while (!str_is_line(preserved_line) && read_checker > 0)
+	while (!str_has_newline(preserved_line) && read_checker != 0)
 	{
 		read_checker = read(fd, buffer, BUFFER_SIZE);
+		if (read_checker == -1)
+		{
+			free(buffer);
+			return (NULL);
+		}
 		preserved_line = ft_strjoin(preserved_line, buffer);
-	}
-	free(buffer);
-	if (read_checker == -1)
-	{
-		return (NULL);
+		printf("Read checker: %lu\n", read_checker);
+		printf("Buffer: %s\n", buffer);
+		printf("Preserved line before: %s\n", preserved_line);
 	}
 	line = retrieve_line(preserved_line);
-	preserved_line = retrieve_buffer(preserved_line);
-	if (read_checker == 0)
-		return (preserved_line);
+	free(buffer);
 	return (line);
+}
+
+# include <fcntl.h>
+# include <stdio.h>
+
+int main(void)
+{
+	// 41_no_nl
+	// multiple_line_with_nl
+	int fd = open("../tests/41_no_nl", O_RDWR);
+	char *str = get_next_line(fd);
+	free(str);
 }

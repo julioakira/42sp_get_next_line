@@ -6,18 +6,22 @@
 /*   By: jakira-p <jakira-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/24 22:58:10 by jakira-p          #+#    #+#             */
-/*   Updated: 2021/09/02 03:50:19 by jakira-p         ###   ########.fr       */
+/*   Updated: 2021/09/06 19:55:50 by jakira-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <stdio.h>
 
-int	str_is_line(char *str)
+// Checks whether a string has a newline '\n' character
+int	str_has_newline(char *str)
 {
 	size_t	idx;
 
+	if (!str)
+		return (0);
 	idx = 0;
-	while (str && str[idx])
+	while (str[idx])
 	{
 		if (str[idx] == '\n')
 			return (1);
@@ -31,8 +35,10 @@ size_t	ft_strlen(const char *str)
 {
 	size_t	idx;
 
+	if (!str)
+		return (0);
 	idx = 0;
-	while (str && str[idx])
+	while (str[idx])
 	{
 		idx++;
 	}
@@ -57,7 +63,23 @@ void	*ft_calloc(size_t nmemb, size_t size)
 	return (ptr);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strdup(char *s)
+{
+	char	*dup;
+	char	*ptr;
+	size_t	s_len;
+
+	s_len = ft_strlen(s);
+	dup = malloc(s_len + 1);
+	ptr = dup;
+	while (*s)
+		*dup++ = *s++;
+	*dup = '\0';
+	return (ptr);
+}
+
+// Works like strjoin, but frees s1
+char	*ft_strjoin(char *s1, char *s2)
 {
 	char	*result;
 	size_t	idx;
@@ -81,5 +103,6 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		idx++;
 		s_idx++;
 	}
+	free(s1);
 	return (result);
 }
