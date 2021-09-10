@@ -6,7 +6,7 @@
 /*   By: jakira-p <jakira-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/24 22:58:15 by jakira-p          #+#    #+#             */
-/*   Updated: 2021/09/10 03:56:23 by jakira-p         ###   ########.fr       */
+/*   Updated: 2021/09/10 06:22:31 by jakira-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ int		str_has_newline(char *str);
 size_t	ft_strlen(const char *str);
 void	*ft_calloc(size_t nmemb, size_t size);
 char	*ft_strjoin(char *s1, char *s2);
+char	*ft_strdup(const char *s);
 void	ft_bzero(void *s, size_t n);
 
 // Main function
