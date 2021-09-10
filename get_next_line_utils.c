@@ -6,12 +6,11 @@
 /*   By: jakira-p <jakira-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/24 22:58:10 by jakira-p          #+#    #+#             */
-/*   Updated: 2021/09/10 01:31:05 by jakira-p         ###   ########.fr       */
+/*   Updated: 2021/09/10 03:56:13 by jakira-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h>
 
 int	str_has_newline(char *str)
 {
@@ -45,37 +44,20 @@ size_t	ft_strlen(const char *str)
 }
 
 // Implementation without aux functions (memset and bzero)
-void    *ft_calloc(size_t nmemb, size_t size)
+void	*ft_calloc(size_t nmemb, size_t size)
 {
-    void    *ptr;
-    size_t    idx;
+	void	*ptr;
+	size_t	idx;
 
-    idx = 0;
-    ptr = malloc(nmemb * size);
-    if (!ptr)
-        return (NULL);
-    while (idx < (nmemb * size))
-    {
-        ((unsigned char *)ptr)[idx] = (unsigned char)0;
-        idx++;
-    }
-    return (ptr);
-}
-
-char	*ft_strdup(const char *s)
-{
-	char	*dup;
-	char	*ptr;
-	size_t	s_len;
-
-	s_len = ft_strlen(s);
-	dup = malloc(s_len + 1);
-	if (!dup)
+	idx = 0;
+	ptr = malloc(nmemb * size);
+	if (!ptr)
 		return (NULL);
-	ptr = dup;
-	while (*s)
-		*dup++ = *s++;
-	*dup = '\0';
+	while (idx < (nmemb * size))
+	{
+		((unsigned char *)ptr)[idx] = (unsigned char)0;
+		idx++;
+	}
 	return (ptr);
 }
 
