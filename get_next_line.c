@@ -6,7 +6,7 @@
 /*   By: jakira-p <jakira-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/24 22:58:12 by jakira-p          #+#    #+#             */
-/*   Updated: 2021/09/10 01:09:37 by jakira-p         ###   ########.fr       */
+/*   Updated: 2021/09/10 01:30:42 by jakira-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 
 static char	*retrieve_line(char **buffer);
 static char	*buffer_to_line(char **buffer, char *line);
+static int	handler(int fd, char **buffer, char **preserved_line, char **line);
 
 static char	*buffer_to_line(char **buffer, char *line)
 {
@@ -64,7 +65,7 @@ static char	*retrieve_line(char **buffer)
 	return (line);
 }
 
-int	handler(int fd, char **buffer, char **preserved_line, char **line)
+static int	handler(int fd, char **buffer, char **preserved_line, char **line)
 {
 	char	*holder;
 	int		read_checker;
@@ -80,7 +81,6 @@ int	handler(int fd, char **buffer, char **preserved_line, char **line)
 			return (-1);
 		}
 		holder = *preserved_line;
-		// Leaking here
 		*preserved_line = ft_strjoin(holder, *buffer);
 		ft_bzero(*buffer, BUFFER_SIZE);
 		if (holder)
@@ -89,7 +89,7 @@ int	handler(int fd, char **buffer, char **preserved_line, char **line)
 			break ;
 	}
 	if (*buffer)
-	free(*buffer);
+		free(*buffer);
 	if (read_checker == 0 && !*preserved_line[0])
 	{
 		return (-1);
