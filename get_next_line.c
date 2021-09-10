@@ -6,7 +6,7 @@
 /*   By: jakira-p <jakira-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/24 22:58:12 by jakira-p          #+#    #+#             */
-/*   Updated: 2021/09/06 19:58:35 by jakira-p         ###   ########.fr       */
+/*   Updated: 2021/09/10 01:09:37 by jakira-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,20 @@
 
 #include "get_next_line.h"
 
-static char	*retrieve_line(char *buffer);
-static char	*buffer_to_line(char *buffer, char *line);
+static char	*retrieve_line(char **buffer);
+static char	*buffer_to_line(char **buffer, char *line);
 
-static char	*buffer_to_line(char *buffer, char *line)
+static char	*buffer_to_line(char **buffer, char *line)
 {
 	size_t	idx;
 
 	idx = 0;
-	while (buffer[idx])
+	while ((*buffer)[idx])
 	{
-		line[idx] = buffer[idx];
-		if (buffer[idx] == '\n')
+		line[idx] = (*buffer)[idx];
+		if ((*buffer)[idx] == '\n')
 		{
-			line[idx] = buffer[idx];
+			line[idx] = (*buffer)[idx];
 			idx++;
 			break ;
 		}
@@ -36,69 +36,90 @@ static char	*buffer_to_line(char *buffer, char *line)
 	return (line);
 }
 
-static char	*retrieve_line(char *buffer)
+static char	*retrieve_line(char **buffer)
 {
 	size_t	idx;
 	char	*line;
+	char	*ptr;
 
 	idx = 0;
-	if (!buffer)
+	if (!*buffer || *buffer[0] == '\0')
 		return (NULL);
-	while (buffer[idx])
+	while ((*buffer)[idx])
 	{
-		if (buffer[idx] == '\n')
+		if ((*buffer)[idx] == '\n')
 		{
 			idx++;
 			break ;
 		}
 		idx++;
 	}
-	line = ft_calloc(idx + 1, sizeof(char));
+	line = ft_calloc((idx + 1), sizeof(char));
 	if (!line)
 		return (NULL);
 	line = buffer_to_line(buffer, line);
+	ptr = *buffer;
+	*buffer = ft_strdup(&(*buffer)[idx]);
+	free(ptr);
 	return (line);
 }
 
+int	handler(int fd, char **buffer, char **preserved_line, char **line)
+{
+	char	*holder;
+	int		read_checker;
+
+	read_checker = 1;
+	*line = NULL;
+	while (!str_has_newline(*preserved_line) && read_checker)
+	{
+		read_checker = read(fd, *buffer, BUFFER_SIZE);
+		if (read_checker < 0)
+		{
+			free(*buffer);
+			return (-1);
+		}
+		holder = *preserved_line;
+		// Leaking here
+		*preserved_line = ft_strjoin(holder, *buffer);
+		ft_bzero(*buffer, BUFFER_SIZE);
+		if (holder)
+			free(holder);
+		if (read_checker == 0)
+			break ;
+	}
+	if (*buffer)
+	free(*buffer);
+	if (read_checker == 0 && !*preserved_line[0])
+	{
+		return (-1);
+	}
+	*line = retrieve_line(preserved_line);
+	return (read_checker);
+}
+
+// Needs to check buffer to see if file has ended
+// if buffer = "" file has ended.
 char	*get_next_line(int fd)
 {
 	char		*buffer;
-	char		*line;
 	static char	*preserved_line;
-	ssize_t		read_checker;
+	char		*line;
+	int			result;
 
-	read_checker = 1;
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+	buffer = ft_calloc((BUFFER_SIZE + 1), sizeof(char));
 	if (!buffer)
 		return (NULL);
-	while (!str_has_newline(preserved_line) && read_checker != 0)
+	if (!preserved_line)
+		preserved_line = NULL;
+	result = handler(fd, &buffer, &preserved_line, &line);
+	if (result <= 0 && !line)
 	{
-		read_checker = read(fd, buffer, BUFFER_SIZE);
-		if (read_checker == -1)
-		{
-			free(buffer);
-			return (NULL);
-		}
-		preserved_line = ft_strjoin(preserved_line, buffer);
-		printf("Read checker: %lu\n", read_checker);
-		printf("Buffer: %s\n", buffer);
-		printf("Preserved line before: %s\n", preserved_line);
+		if (line)
+			free(line);
+		return (NULL);
 	}
-	line = retrieve_line(preserved_line);
-	free(buffer);
 	return (line);
-}
-
-# include <fcntl.h>
-# include <stdio.h>
-
-int main(void)
-{
-	// 41_no_nl
-	// multiple_line_with_nl
-	int fd = open("../tests/41_no_nl", O_RDWR);
-	char *str = get_next_line(fd);
-	free(str);
 }

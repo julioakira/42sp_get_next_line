@@ -6,14 +6,13 @@
 /*   By: jakira-p <jakira-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/24 22:58:10 by jakira-p          #+#    #+#             */
-/*   Updated: 2021/09/06 19:55:50 by jakira-p         ###   ########.fr       */
+/*   Updated: 2021/09/10 01:19:36 by jakira-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <stdio.h>
 
-// Checks whether a string has a newline '\n' character
 int	str_has_newline(char *str)
 {
 	size_t	idx;
@@ -46,39 +45,34 @@ size_t	ft_strlen(const char *str)
 }
 
 // Implementation without aux functions (memset and bzero)
-void	*ft_calloc(size_t nmemb, size_t size)
+void    *ft_calloc(size_t nmemb, size_t size)
 {
-	void	*ptr;
-	size_t	idx;
+    void    *ptr;
+    size_t    idx;
 
-	idx = 0;
-	ptr = malloc(nmemb * size);
-	if (!ptr)
-		return (NULL);
-	while (idx < (nmemb * size))
+    idx = 0;
+    ptr = malloc(nmemb * size);
+    if (!ptr)
+        return (NULL);
+    while (idx < (nmemb * size))
+    {
+        ((unsigned char *)ptr)[idx] = (unsigned char)0;
+        idx++;
+    }
+    return (ptr);
+}
+
+void	ft_bzero(void *s, size_t n)
+{
+	char	*p;
+
+	p = (char *)s;
+	while (n > 0)
 	{
-		((unsigned char *)ptr)[idx] = (unsigned char)0;
-		idx++;
+		*(p + --n) = (char)0;
 	}
-	return (ptr);
 }
 
-char	*ft_strdup(char *s)
-{
-	char	*dup;
-	char	*ptr;
-	size_t	s_len;
-
-	s_len = ft_strlen(s);
-	dup = malloc(s_len + 1);
-	ptr = dup;
-	while (*s)
-		*dup++ = *s++;
-	*dup = '\0';
-	return (ptr);
-}
-
-// Works like strjoin, but frees s1
 char	*ft_strjoin(char *s1, char *s2)
 {
 	char	*result;
@@ -87,7 +81,7 @@ char	*ft_strjoin(char *s1, char *s2)
 
 	if (!s1 && !s2)
 		return (NULL);
-	result = (char *)ft_calloc(ft_strlen(s1) + ft_strlen(s2) + 1, sizeof(char));
+	result = (char *)malloc((ft_strlen(s1) + ft_strlen(s2) + 1) * sizeof(char));
 	idx = 0;
 	s_idx = 0;
 	if (result == NULL)
@@ -103,6 +97,6 @@ char	*ft_strjoin(char *s1, char *s2)
 		idx++;
 		s_idx++;
 	}
-	free(s1);
+	result[idx] = '\0';
 	return (result);
 }
