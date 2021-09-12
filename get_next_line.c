@@ -6,7 +6,7 @@
 /*   By: jakira-p <jakira-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/24 22:58:12 by jakira-p          #+#    #+#             */
-/*   Updated: 2021/09/10 06:22:33 by jakira-p         ###   ########.fr       */
+/*   Updated: 2021/09/12 04:19:56 by jakira-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,16 @@
 static char	*retrieve_line(char **buffer);
 static char	*buffer_to_line(char **buffer, char *line);
 static int	handler(int fd, char **buffer, char **preserved_line, char **line);
+static void	free_and_reset(void *ptr);
+
+static void	free_and_reset(void *ptr)
+{
+	if (ptr)
+	{
+		free(ptr);
+		ptr = NULL;
+	}
+}
 
 static char	*buffer_to_line(char **buffer, char *line)
 {
@@ -81,17 +91,13 @@ static int	handler(int fd, char **buffer, char **preserved_line, char **line)
 		holder = *preserved_line;
 		*preserved_line = ft_strjoin(holder, *buffer);
 		ft_bzero(*buffer, BUFFER_SIZE);
-		if (holder)
-			free(holder);
+		free_and_reset(holder);
 		if (read_checker == 0)
 			break ;
 	}
-	if (*buffer)
-		free(*buffer);
+	free_and_reset(*buffer);
 	if (read_checker == 0 && !*preserved_line[0])
-	{
 		return (-1);
-	}
 	*line = retrieve_line(preserved_line);
 	return (read_checker);
 }
