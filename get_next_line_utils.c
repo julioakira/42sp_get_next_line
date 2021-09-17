@@ -6,7 +6,7 @@
 /*   By: jakira-p <jakira-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/24 22:58:10 by jakira-p          #+#    #+#             */
-/*   Updated: 2021/09/12 04:33:34 by jakira-p         ###   ########.fr       */
+/*   Updated: 2021/09/17 06:44:58 by jakira-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	str_has_newline(char *str)
 {
 	size_t	idx;
 
-	if (!str)
+	if (!str || !str[0])
 		return (0);
 	idx = 0;
 	while (str[idx])

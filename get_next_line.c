@@ -6,7 +6,7 @@
 /*   By: jakira-p <jakira-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/24 22:58:12 by jakira-p          #+#    #+#             */
-/*   Updated: 2021/09/12 04:19:56 by jakira-p         ###   ########.fr       */
+/*   Updated: 2021/09/17 08:11:08 by jakira-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,15 +79,11 @@ static int	handler(int fd, char **buffer, char **preserved_line, char **line)
 	int		read_checker;
 
 	read_checker = 1;
-	*line = NULL;
 	while (!str_has_newline(*preserved_line) && read_checker)
 	{
 		read_checker = read(fd, *buffer, BUFFER_SIZE);
 		if (read_checker < 0)
-		{
-			free(*buffer);
 			return (-1);
-		}
 		holder = *preserved_line;
 		*preserved_line = ft_strjoin(holder, *buffer);
 		ft_bzero(*buffer, BUFFER_SIZE);
@@ -95,15 +91,15 @@ static int	handler(int fd, char **buffer, char **preserved_line, char **line)
 		if (read_checker == 0)
 			break ;
 	}
-	free_and_reset(*buffer);
-	if (read_checker == 0 && !*preserved_line[0])
+	if (read_checker == 0 && !(*preserved_line)[0])
+	{
+		free_and_reset(*preserved_line);
 		return (-1);
+	}
 	*line = retrieve_line(preserved_line);
 	return (read_checker);
 }
 
-// Needs to check buffer to see if file has ended
-// if buffer = "" file has ended.
 char	*get_next_line(int fd)
 {
 	char		*buffer;
@@ -118,12 +114,13 @@ char	*get_next_line(int fd)
 		return (NULL);
 	if (!preserved_line)
 		preserved_line = NULL;
+	line = NULL;
 	result = handler(fd, &buffer, &preserved_line, &line);
+	free(buffer);
 	if (result <= 0 && !line)
 	{
-		if (line)
-			free(line);
-		return (NULL);
+		preserved_line = NULL;
+		line = NULL;
 	}
 	return (line);
 }
