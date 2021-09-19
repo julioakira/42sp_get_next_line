@@ -6,7 +6,7 @@
 /*   By: jakira-p <jakira-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/24 22:58:12 by jakira-p          #+#    #+#             */
-/*   Updated: 2021/09/17 08:11:08 by jakira-p         ###   ########.fr       */
+/*   Updated: 2021/09/19 18:09:36 by jakira-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,9 +118,6 @@ char	*get_next_line(int fd)
 	result = handler(fd, &buffer, &preserved_line, &line);
 	free(buffer);
 	if (result <= 0 && !line)
-	{
 		preserved_line = NULL;
-		line = NULL;
-	}
 	return (line);
 }
