@@ -6,7 +6,7 @@
 /*   By: jakira-p <jakira-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/24 22:58:12 by jakira-p          #+#    #+#             */
-/*   Updated: 2021/09/20 05:23:06 by jakira-p         ###   ########.fr       */
+/*   Updated: 2021/09/20 05:56:05 by jakira-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,8 @@ static void	free_and_reset(void *ptr);
 
 static void	free_and_reset(void *ptr)
 {
-	if (ptr)
-	{
-		free(ptr);
-		ptr = NULL;
-	}
+	free(ptr);
+	ptr = NULL;
 }
 
 static char	*buffer_to_line(char **buffer, char *line)
