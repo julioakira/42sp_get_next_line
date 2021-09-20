@@ -6,19 +6,15 @@
 /*   By: jakira-p <jakira-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/24 22:58:15 by jakira-p          #+#    #+#             */
-/*   Updated: 2021/09/19 17:48:33 by jakira-p         ###   ########.fr       */
+/*   Updated: 2021/09/19 20:06:52 by jakira-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#ifndef GET_NEXT_LINE_BONUS_H
+# define GET_NEXT_LINE_BONUS_H
 
 # include <stdlib.h>
 # include <unistd.h>
-
-#ifndef FD_SIZE
-# define FD_SIZE 256
-#endif
 
 // Auxiliary functions
 int		str_has_newline(char *str);

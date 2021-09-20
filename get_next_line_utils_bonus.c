@@ -6,7 +6,7 @@
 /*   By: jakira-p <jakira-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/24 22:58:10 by jakira-p          #+#    #+#             */
-/*   Updated: 2021/09/19 17:50:15 by jakira-p         ###   ########.fr       */
+/*   Updated: 2021/09/20 05:31:23 by jakira-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,13 +56,12 @@ char	*ft_strdup(const char *s)
 	s_len = 0;
 	while (s && s[s_len])
 		s_len++;
-	dup = malloc(s_len + 1);
+	dup = ft_calloc(s_len + 1, sizeof(char));
 	if (!dup)
 		return (NULL);
 	ptr = dup;
 	while (*s)
 		*dup++ = *s++;
-	*dup = '\0';
 	return (ptr);
 }
 

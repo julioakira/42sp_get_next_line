@@ -6,7 +6,7 @@
 /*   By: jakira-p <jakira-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/24 22:58:12 by jakira-p          #+#    #+#             */
-/*   Updated: 2021/09/19 18:09:36 by jakira-p         ###   ########.fr       */
+/*   Updated: 2021/09/20 05:23:06 by jakira-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,12 @@
 
 static char	*retrieve_line(char **buffer);
 static char	*buffer_to_line(char **buffer, char *line);
-static int	handler(int fd, char **buffer, char **preserved_line, char **line);
+static char	*handle_line(
+				int fd,
+				char **buffer,
+				char **preserved_line,
+				char **line
+				);
 static void	free_and_reset(void *ptr);
 
 static void	free_and_reset(void *ptr)
@@ -73,7 +78,12 @@ static char	*retrieve_line(char **buffer)
 	return (line);
 }
 
-static int	handler(int fd, char **buffer, char **preserved_line, char **line)
+static char	*handle_line(
+						int fd,
+						char **buffer,
+						char **preserved_line,
+						char **line
+						)
 {
 	char	*holder;
 	int		read_checker;
@@ -83,7 +93,7 @@ static int	handler(int fd, char **buffer, char **preserved_line, char **line)
 	{
 		read_checker = read(fd, *buffer, BUFFER_SIZE);
 		if (read_checker < 0)
-			return (-1);
+			return (NULL);
 		holder = *preserved_line;
 		*preserved_line = ft_strjoin(holder, *buffer);
 		ft_bzero(*buffer, BUFFER_SIZE);
@@ -94,10 +104,10 @@ static int	handler(int fd, char **buffer, char **preserved_line, char **line)
 	if (read_checker == 0 && !(*preserved_line)[0])
 	{
 		free_and_reset(*preserved_line);
-		return (-1);
+		return (NULL);
 	}
 	*line = retrieve_line(preserved_line);
-	return (read_checker);
+	return (*line);
 }
 
 char	*get_next_line(int fd)
@@ -105,7 +115,6 @@ char	*get_next_line(int fd)
 	char		*buffer;
 	static char	*preserved_line;
 	char		*line;
-	int			result;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
@@ -114,10 +123,9 @@ char	*get_next_line(int fd)
 		return (NULL);
 	if (!preserved_line)
 		preserved_line = NULL;
-	line = NULL;
-	result = handler(fd, &buffer, &preserved_line, &line);
-	free(buffer);
-	if (result <= 0 && !line)
+	line = handle_line(fd, &buffer, &preserved_line, &line);
+	free_and_reset(buffer);
+	if (!line)
 		preserved_line = NULL;
 	return (line);
 }
